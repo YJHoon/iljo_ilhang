@@ -10,4 +10,5 @@ CarrierWave.configure do |config|
   config.fog_public = false
   config.cache_dir = "#{Rails.root}/tmp/uploads"         # To let CarrierWave work on Heroku
   config.storage = :fog
+  config.asset_host = Rails.application.credentials.dig(:aws, :cloudfront_url)
 end
