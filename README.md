@@ -2,9 +2,9 @@
 
 일조일항의 api 서버입니다.
 
-ruby "3.2.2"
-rails "7.1.2"
-DB "postgresql"
+ruby "3.2.2"  
+rails "7.1.2"  
+DB "postgresql"  
 
 ---
 
