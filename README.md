@@ -8,7 +8,7 @@ DB "postgresql"
 
 ---
 
-Image Upload with Carrierwave, fog, S3, CloudFront
+Image Upload with Carrierwave, fog, S3, CloudFront  
 Before start the server, you need to install 'imagemagick'
 
 ```
