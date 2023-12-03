@@ -4,6 +4,7 @@ class CreateMembers < ActiveRecord::Migration[7.1]
       t.references :political_party, foreign_key: true
       t.references :election, foreign_key: true
       t.string :name
+      t.string :image
       t.string :region
       t.string :birth
       t.string :edu

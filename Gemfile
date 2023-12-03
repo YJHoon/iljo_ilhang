@@ -14,8 +14,11 @@ gem "puma", ">= 5.0"
 gem "sidekiq", "~> 7.2"
 gem "whenever", require: false
 gem "rufo"
-gem "aws-sdk-s3"
 gem "panko_serializer"
+
+# file upload
+gem "fog-aws"
+gem "carrierwave"
 
 # Build JSON APIs with ease [https://github.com/rails/jbuilder]
 # gem "jbuilder"
