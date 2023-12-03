@@ -1,0 +1,31 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  political_party: one
+  election: one
+  name: MyString
+  image: MyString
+  region: MyString
+  birth: MyString
+  edu: MyString
+  job: MyString
+  career1: MyString
+  career2: MyString
+  hubo_id: MyString
+  gender: 1
+  status: 1
+
+two:
+  political_party: two
+  election: two
+  name: MyString
+  image: MyString
+  region: MyString
+  birth: MyString
+  edu: MyString
+  job: MyString
+  career1: MyString
+  career2: MyString
+  hubo_id: MyString
+  gender: 1
+  status: 1

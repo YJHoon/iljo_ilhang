@@ -10,9 +10,29 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2023_11_30_073038) do
+ActiveRecord::Schema[7.1].define(version: 2023_12_03_065246) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "candidates", force: :cascade do |t|
+    t.bigint "political_party_id", null: false
+    t.bigint "election_id", null: false
+    t.string "name"
+    t.string "image"
+    t.string "region"
+    t.string "birth"
+    t.string "edu"
+    t.string "job"
+    t.string "career1"
+    t.string "career2"
+    t.string "hubo_id"
+    t.integer "gender", default: 0
+    t.integer "status", default: 0
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["election_id"], name: "index_candidates_on_election_id"
+    t.index ["political_party_id"], name: "index_candidates_on_political_party_id"
+  end
 
   create_table "elections", force: :cascade do |t|
     t.string "title"
@@ -27,6 +47,7 @@ ActiveRecord::Schema[7.1].define(version: 2023_11_30_073038) do
     t.bigint "political_party_id"
     t.bigint "election_id"
     t.string "name"
+    t.string "image"
     t.string "region"
     t.string "birth"
     t.string "edu"
@@ -35,7 +56,7 @@ ActiveRecord::Schema[7.1].define(version: 2023_11_30_073038) do
     t.string "career2"
     t.string "hubo_id"
     t.integer "gender", default: 0
-    t.boolean "status", default: false
+    t.integer "status", default: 0
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["election_id"], name: "index_members_on_election_id"
@@ -77,6 +98,8 @@ ActiveRecord::Schema[7.1].define(version: 2023_11_30_073038) do
     t.datetime "updated_at", null: false
   end
 
+  add_foreign_key "candidates", "elections"
+  add_foreign_key "candidates", "political_parties"
   add_foreign_key "members", "elections"
   add_foreign_key "members", "political_parties"
   add_foreign_key "pledges", "members"
