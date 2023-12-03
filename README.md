@@ -11,9 +11,10 @@ DB "postgresql"
 Image Upload with Carrierwave, fog, S3, CloudFront
 Before start the server, you need to install 'imagemagick'
 
-````
+```
 brew install imagemagick
 ```
+
 ---
 
 ### 사용 OPEN API
@@ -27,6 +28,5 @@ brew install imagemagick
   [중앙선거관리위원회 선거공약정보](https://www.data.go.kr/data/15040587/openapi.do#tab_layer_detail_function)
 
 **4. 활동중인 의원 정보 호출**
-
   [열린국회정보](https://open.assembly.go.kr/portal/data/service/selectAPIServicePage.do/OWSSC6001134T516707#none)
 ````
