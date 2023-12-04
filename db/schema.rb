@@ -20,14 +20,10 @@ ActiveRecord::Schema[7.1].define(version: 2023_12_03_065246) do
     t.string "name"
     t.string "image"
     t.string "region"
-    t.string "birth"
-    t.string "edu"
-    t.string "job"
-    t.string "career1"
-    t.string "career2"
-    t.string "hubo_id"
     t.integer "gender", default: 0
     t.integer "status", default: 0
+    t.string "hubo_id"
+    t.json "info"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["election_id"], name: "index_candidates_on_election_id"
@@ -48,15 +44,9 @@ ActiveRecord::Schema[7.1].define(version: 2023_12_03_065246) do
     t.bigint "election_id"
     t.string "name"
     t.string "image"
-    t.string "region"
-    t.string "birth"
-    t.string "edu"
-    t.string "job"
-    t.string "career1"
-    t.string "career2"
-    t.string "hubo_id"
     t.integer "gender", default: 0
     t.integer "status", default: 0
+    t.json "info"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["election_id"], name: "index_members_on_election_id"
