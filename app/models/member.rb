@@ -6,7 +6,4 @@ class Member < ApplicationRecord
 
   enum gender: { male: 0, female: 1 }
   enum status: { candidate: 0, current: 1 }
-
-  def self.get
-  end
 end

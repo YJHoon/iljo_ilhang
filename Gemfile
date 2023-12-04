@@ -19,6 +19,11 @@ gem "panko_serializer"
 # file upload
 gem "fog-aws"
 gem "carrierwave"
+gem "open-uri"
+
+# web crawling
+gem "httparty"
+gem "nokogiri"
 
 # Build JSON APIs with ease [https://github.com/rails/jbuilder]
 # gem "jbuilder"
