@@ -5,15 +5,10 @@ class CreateMembers < ActiveRecord::Migration[7.1]
       t.references :election, foreign_key: true
       t.string :name
       t.string :image
-      t.string :region
-      t.string :birth
-      t.string :edu
-      t.string :job
-      t.string :career1
-      t.string :career2
-      t.string :hubo_id
+      t.date :birth
       t.integer :gender, default: 0
       t.integer :status, default: 0
+      t.json :info
 
       t.timestamps
     end
