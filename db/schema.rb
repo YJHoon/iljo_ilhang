@@ -20,6 +20,7 @@ ActiveRecord::Schema[7.1].define(version: 2023_12_03_065246) do
     t.string "name"
     t.string "image"
     t.string "region"
+    t.date "birth"
     t.integer "gender", default: 0
     t.integer "status", default: 0
     t.string "hubo_id"
@@ -44,6 +45,7 @@ ActiveRecord::Schema[7.1].define(version: 2023_12_03_065246) do
     t.bigint "election_id"
     t.string "name"
     t.string "image"
+    t.date "birth"
     t.integer "gender", default: 0
     t.integer "status", default: 0
     t.json "info"
@@ -78,7 +80,7 @@ ActiveRecord::Schema[7.1].define(version: 2023_12_03_065246) do
   create_table "users", force: :cascade do |t|
     t.string "name"
     t.string "email"
-    t.string "birth"
+    t.date "birth"
     t.string "phone"
     t.integer "gender", default: 0
     t.string "uid"
