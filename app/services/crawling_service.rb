@@ -1,16 +1,37 @@
 class CrawlingService
   PERMIT_IMAGE_FORMAT = %w[png jpg jpeg].freeze
+  # 중앙선거관리위원회 코드정보
+  ELECTION_CODE_URL = "http://apis.data.go.kr/9760000/CommonCodeService/getCommonSgCodeList"
+  # 중앙선거관리위원회 후보자 정보 호출
+  ELECTION_CANDIDATES_URL = "http://apis.data.go.kr/9760000/PofelcddInfoInqireService/getPofelcddRegistSttusInfoInqire"
+  # 선거 공약 호출
+  ELECTION_PLEDGE_URL = "http://apis.data.go.kr/9760000/ElecPrmsInfoInqireService/getCnddtElecPrmsInfoInqire"
+  # 활동중인 의원 정보 호출
+  CURRENT_MEMBER_URL = "https://open.assembly.go.kr/portal/data/service/selectAPIServicePage.do/OWSSC6001134T516707"
 
   def initialize
     @crawling = nil
     @page_num = 1
   end
 
-  def page_scrapping
+  def scrap_page(url)
+    response = HTTParty.get(scrap_url)
+    document = Nokogiri::HTML(response.body)
+    return document
+  end
+
+  def check_open_api_update()
+    # document = scrap_page(CURRENT_MEMBER_URL)
+
+    response = HTTParty.get("https://open.assembly.go.kr/portal/data/service/selectAPIServicePage.do/OWSSC6001134T516707#none")
+    document = Nokogiri::HTML(response.body)
+    document.css("section#metaInfo tbody tr").second.css("td").second
+  end
+
+  def page_scrapping_for_image_update # 국회의원 이미지 업데이트
     loop do
       scrap_url = "https://watch.peoplepower21.org/?mid=AssemblyMembers&mode=search&party=&region=&sangim=&gender=&elect_num=&page=#{@page_num}#watch"
-      response = HTTParty.get(scrap_url)
-      document = Nokogiri::HTML(response.body)
+      document = scrap_page(scrap_url)
       member_list = document.css("div#content div.col-md-2")
       break if member_list.size.zero?
 
