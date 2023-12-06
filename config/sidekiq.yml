@@ -1,0 +1,19 @@
+---
+:verbose: false
+:concurrency: 5
+:timeout: 25
+
+:queues:
+  - default
+  - low
+
+staging:
+  :concurrency: 10
+
+production:
+  :concurrency: 20
+  :timeout: 30
+  :queues:
+    - default
+    - mailers
+    - high_priority
