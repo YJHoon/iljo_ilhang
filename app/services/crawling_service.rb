@@ -10,22 +10,24 @@ class CrawlingService
   CURRENT_MEMBER_URL = "https://open.assembly.go.kr/portal/data/service/selectAPIServicePage.do/OWSSC6001134T516707"
 
   def initialize
-    @crawling = nil
     @page_num = 1
   end
 
-  def scrap_page(url)
-    response = HTTParty.get(scrap_url)
-    document = Nokogiri::HTML(response.body)
-    return document
-  end
+  def check_open_api_update # 마지막 업데이트 일시 체크
+    options = Selenium::WebDriver::Chrome::Options.new
+    # 크롬 헤드리스 모드 위해 옵션 설정
+    options.add_argument("--disable-extensions")
+    options.add_argument("--headless")
+    options.add_argument("--disable-gpu")
+    options.add_argument("--no-sandbox")
 
-  def check_open_api_update()
-    # document = scrap_page(CURRENT_MEMBER_URL)
+    # 셀레니움 + 크롬 + 헤드리스 옵션으로 브라우저 실행
+    @browser = Selenium::WebDriver.for :chrome, options: options
 
-    response = HTTParty.get("https://open.assembly.go.kr/portal/data/service/selectAPIServicePage.do/OWSSC6001134T516707#none")
-    document = Nokogiri::HTML(response.body)
-    document.css("section#metaInfo tbody tr").second.css("td").second
+    # 다음 페이지로 이동
+    @browser.navigate().to "https://open.assembly.go.kr/portal/data/service/selectAPIServicePage.do/OWSSC6001134T516707#none"
+    @browser.find_element(css: "section#metaInfo table tbody tr:nth-child(2) td:nth-child(4)").attribute("innerHTML")
+    @browser.quit if @browser # 혹시나 열린 브라우저가 있으면 close
   end
 
   def page_scrapping_for_image_update # 국회의원 이미지 업데이트
@@ -41,6 +43,12 @@ class CrawlingService
   end
 
   private
+
+  def scrap_page(url)
+    response = HTTParty.get(scrap_url)
+    document = Nokogiri::HTML(response.body)
+    return document
+  end
 
   def update_member_image(member_list)
     member_list.each do |data|

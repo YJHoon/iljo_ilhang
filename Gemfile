@@ -24,6 +24,7 @@ gem "open-uri"
 # web crawling
 gem "httparty"
 gem "nokogiri"
+gem "selenium-webdriver"
 
 # Build JSON APIs with ease [https://github.com/rails/jbuilder]
 # gem "jbuilder"
