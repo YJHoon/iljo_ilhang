@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2023_12_03_065246) do
+ActiveRecord::Schema[7.1].define(version: 2023_12_11_065028) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -20,6 +20,7 @@ ActiveRecord::Schema[7.1].define(version: 2023_12_03_065246) do
     t.string "name"
     t.string "image"
     t.string "region"
+    t.date "birth"
     t.integer "gender", default: 0
     t.integer "status", default: 0
     t.string "hubo_id"
@@ -32,9 +33,17 @@ ActiveRecord::Schema[7.1].define(version: 2023_12_03_065246) do
 
   create_table "elections", force: :cascade do |t|
     t.string "title"
-    t.string "date"
+    t.string "vote_date"
     t.string "sg_id"
-    t.boolean "is_active", default: false
+    t.string "sg_type_code"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "error_logs", force: :cascade do |t|
+    t.string "content"
+    t.integer "request_type"
+    t.json "response"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
@@ -44,6 +53,7 @@ ActiveRecord::Schema[7.1].define(version: 2023_12_03_065246) do
     t.bigint "election_id"
     t.string "name"
     t.string "image"
+    t.date "birth"
     t.integer "gender", default: 0
     t.integer "status", default: 0
     t.json "info"
@@ -78,7 +88,7 @@ ActiveRecord::Schema[7.1].define(version: 2023_12_03_065246) do
   create_table "users", force: :cascade do |t|
     t.string "name"
     t.string "email"
-    t.string "birth"
+    t.date "birth"
     t.string "phone"
     t.integer "gender", default: 0
     t.string "uid"
