@@ -4,6 +4,7 @@
 - rails 7.1.2
 - DB: postgresql
 - formatter: rufo
+- caching_store: memory_store
 
 ---
 
