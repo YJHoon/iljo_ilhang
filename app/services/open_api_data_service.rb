@@ -41,7 +41,7 @@ class OpenApiDataService
           political_party = PoliticalParty.find_or_create_by(name: candidate_data.dig("jdName"))
           political_party.candidates.find_or_create_by(election_id: election.id, name: candidate_data.dig("name"), birth: candidate_data.dig("birthday").to_date) do |candidate|
             candidate.region = candidate_data.dig("sdName")
-            candidate.gender = candidate_data.dig("gender") == "남" ? 0 : 1
+            candidate.gender = UsefulService.valid_gender(candidate_data.dig("gender"))
             candidate.hubo_id = candidate_data.dig("huboid")
             candidate.info = candidate_data
           end
@@ -52,8 +52,9 @@ class OpenApiDataService
     end
   end
 
-  def update_member(data)
+  def update_member()
     get_current_member_data()
+
     return StandardError unless @member_hash.dig(:list).present?
     return StandardError if @member_hash.dig(:response_code) != "INFO-000"
 
@@ -66,8 +67,9 @@ class OpenApiDataService
         name: member_data.dig("HG_NM"),
         birth: member_data.dig("BTH_DATE").to_date,
       ) do |member|
-        member.political_party_id = party.id,
-        member.gender = member_data.dig("SEX_GBN_NM")
+        member.political_party_id = party&.id,
+        member.gender = UsefulService.valid_gender(member_data.dig("SEX_GBN_NM"))
+        member.status = "current"
         member.info = member_data
       end
     end
@@ -103,7 +105,7 @@ class OpenApiDataService
           "User-Agent" => "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.103 Safari/537.36",
         },
       )
-    resposne = JSON.parse(response)
+    response = JSON.parse(response)
     @member_hash = {
       response_code: response.dig("nwvrqwxyaytdsfvhu").first.dig("head").second.dig("RESULT", "CODE"),
       list: response.dig("nwvrqwxyaytdsfvhu").second.dig("row"),
