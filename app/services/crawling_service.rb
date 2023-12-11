@@ -1,33 +1,19 @@
 class CrawlingService
   PERMIT_IMAGE_FORMAT = %w[png jpg jpeg].freeze
-  # 중앙선거관리위원회 코드정보
-  ELECTION_CODE_URL = "http://apis.data.go.kr/9760000/CommonCodeService/getCommonSgCodeList"
-  # 중앙선거관리위원회 후보자 정보 호출
-  ELECTION_CANDIDATES_URL = "http://apis.data.go.kr/9760000/PofelcddInfoInqireService/getPofelcddRegistSttusInfoInqire"
-  # 선거 공약 호출
-  ELECTION_PLEDGE_URL = "http://apis.data.go.kr/9760000/ElecPrmsInfoInqireService/getCnddtElecPrmsInfoInqire"
-  # 활동중인 의원 정보 호출
-  CURRENT_MEMBER_URL = "https://open.assembly.go.kr/portal/data/service/selectAPIServicePage.do/OWSSC6001134T516707"
 
   def initialize
     @page_num = 1
   end
 
   def check_open_api_update # 마지막 업데이트 일시 체크
-    options = Selenium::WebDriver::Chrome::Options.new
-    # 크롬 헤드리스 모드 위해 옵션 설정
-    options.add_argument("--disable-extensions")
-    options.add_argument("--headless")
-    options.add_argument("--disable-gpu")
-    options.add_argument("--no-sandbox")
-
-    # 셀레니움 + 크롬 + 헤드리스 옵션으로 브라우저 실행
-    @browser = Selenium::WebDriver.for :chrome, options: options
-
-    # 다음 페이지로 이동
-    @browser.navigate().to "https://open.assembly.go.kr/portal/data/service/selectAPIServicePage.do/OWSSC6001134T516707#none"
-    @browser.find_element(css: "section#metaInfo table tbody tr:nth-child(2) td:nth-child(4)").attribute("innerHTML")
-    @browser.quit if @browser # 혹시나 열린 브라우저가 있으면 close
+    headers = {
+      "Content-Type" => "application/json",
+      "Accept" => "*/*",
+      "User-Agent" => "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.103 Safari/537.36",
+    }
+    scrap_url = "https://open.assembly.go.kr/portal/data/service/selectAPIServicePage.do/OWSSC6001134T516707#none"
+    document = scrap_page(scrap_url, headers)
+    document.css("section#metaInfo table tbody tr:nth-child(2) td:nth-child(4)").first.children.text
   end
 
   def page_scrapping_for_image_update # 국회의원 이미지 업데이트
@@ -44,8 +30,8 @@ class CrawlingService
 
   private
 
-  def scrap_page(url)
-    response = HTTParty.get(scrap_url)
+  def scrap_page(url, headers = {})
+    response = HTTParty.get(url, headers: headers)
     document = Nokogiri::HTML(response.body)
     return document
   end
