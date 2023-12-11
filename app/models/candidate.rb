@@ -5,7 +5,7 @@ class Candidate < ApplicationRecord
   belongs_to :election
 
   enum gender: { male: 0, female: 1 }
-  enum status: { candidate: 0, current: 1 }
+  enum status: { accept: 0, dead: 1, retirement: 2 }
 
   before_save :check_gender_value, :if => :gender_changed?
 
