@@ -1,5 +1,5 @@
 class OpenApiDataService
-  # attr_reader :get_open_api_data
+  attr_reader :response, :election_hash, :candidate_hash, :member_hash
 
   # 중앙선거관리위원회 코드정보
   ELECTION_CODE_URL = "http://apis.data.go.kr/9760000/CommonCodeService/getCommonSgCodeList"
@@ -11,6 +11,7 @@ class OpenApiDataService
   CURRENT_MEMBER_URL = "https://open.assembly.go.kr/portal/openapi/nwvrqwxyaytdsfvhu"
 
   def initialize()
+    @response = nil
     @election_hash = {}
     @candidate_hash = {}
     @member_hash = {}
@@ -19,14 +20,20 @@ class OpenApiDataService
   def update_elections # 선거 정보 가져오는 코드
     get_election_code()
 
-    return StandardError unless @election_hash.dig(:list).present?
-    return StandardError if @election_hash.dig(:response_code) != "INFO-00"
+    begin
+      raise Exceptions::OpenApiError, "선거 정보 api response 이슈" unless @election_hash.dig(:list).present?
+      raise Exceptions::OpenApiError, "선거 정보 api response 이슈" if @election_hash.dig(:response_code) != "INFO-00"
 
-    @election_hash.dig(:list).each do |election|
-      Election.find_or_create_by!(sg_id: election.dig("sgId"), sg_type_code: election.dig("sgTypecode")) do |e|
-        e.title = election.dig("sgName")
-        e.vote_date = election.dig("sgVotedate")
+      @election_hash.dig(:list).each do |election|
+        Election.find_or_create_by(sg_id: election.dig("sgId"), sg_type_code: election.dig("sgTypecode")) do |e|
+          e.title = election.dig("sgName")
+          e.vote_date = election.dig("sgVotedate")
+        end
       end
+    rescue Exceptions::OpenApiError => e
+      ErrorLog.create(msg: e.message, response: @response)
+    rescue => e
+      ErrorLog.create(msg: e.message, response: @response)
     end
   end
 
@@ -34,6 +41,9 @@ class OpenApiDataService
     Election.all.each do |election|
       begin
         get_election_candidates(election)
+
+        raise Exceptions::OpenApiError, "후보자 정보 api response 이슈" unless @candidate_hash.dig(:list).present?
+        raise Exceptions::OpenApiError, "후보자 정보 api response 이슈" if @candidate_hash.dig(:response_code) != "INFO-00"
 
         next unless @candidate_hash.dig(:response_code).present?
 
@@ -46,52 +56,59 @@ class OpenApiDataService
             candidate.info = candidate_data
           end
         end
+      rescue Exceptions::OpenApiError => e
+        ErrorLog.create(msg: e.message, response: @response)
       rescue => e
-        ErrorLog.create(request_type: "candidate", content: e.message, response: e)
+        ErrorLog.create(msg: e.message, response: @response)
       end
     end
   end
 
-  def update_member()
+  def update_member
     get_current_member_data()
 
-    return StandardError unless @member_hash.dig(:list).present?
-    return StandardError if @member_hash.dig(:response_code) != "INFO-000"
+    begin
+      raise Exceptions::OpenApiError, "현 의원 api response 이슈" unless @member_hash.dig(:list).present?
+      raise Exceptions::OpenApiError, "현 의원 api response 이슈" if @member_hash.dig(:response_code) != "INFO-000"
 
-    @member_hash.dig(:list).each do |member_data|
-      party = PoliticalParty.find_by_name(member_data.dig("POLY_NM"))
-      election = Election.last # TODO: 현재 국회의원들의 election 찾아야함
+      @member_hash.dig(:list).each do |member_data|
+        party = PoliticalParty.find_by_name(member_data.dig("POLY_NM"))
+        election = Election.last # TODO: 현재 국회의원들의 election 찾아야함
 
-      Member.find_or_create_by(
-        election_id: election.id,
-        name: member_data.dig("HG_NM"),
-        birth: member_data.dig("BTH_DATE").to_date,
-      ) do |member|
-        member.political_party_id = party&.id,
-        member.gender = UsefulService.valid_gender(member_data.dig("SEX_GBN_NM"))
-        member.status = "current"
-        member.info = member_data
+        Member.find_or_create_by(
+          election_id: election.id,
+          name: member_data.dig("HG_NM"),
+          birth: member_data.dig("BTH_DATE").to_date,
+        ).update(gender: UsefulService.valid_gender(member_data.dig("SEX_GBN_NM")), status: "current", info: member_data)
       end
+    rescue Exceptions::OpenApiError => e
+      ErrorLog.create(msg: e.message, response: @response)
+    rescue => e
+      ErrorLog.create(msg: e.message, response: @response)
     end
   end
 
-  # private
+  private
 
   def get_election_code # 선거 코드
-    response = HTTParty.get("#{ELECTION_CODE_URL}?ServiceKey=#{Rails.application.credentials.dig(:public_data_service_key)}&resultType=json&numOfRows=1000")
+    @response = HTTParty.get("#{ELECTION_CODE_URL}?ServiceKey=#{Rails.application.credentials.dig(:public_data_service_key)}&resultType=json&numOfRows=1000")
+
+    ResponseLog.create(msg: "선거 코드 open api", request_type: "open_api", response: @response)
 
     @election_hash = {
-      response_code: response.dig("getCommonSgCodeList", "header", "code"),
-      list: response.dig("getCommonSgCodeList", "item"),
+      response_code: @response.dig("getCommonSgCodeList", "header", "code"),
+      list: @response.dig("getCommonSgCodeList", "item"),
     }
   end
 
   def get_election_candidates(election) # 후보자들 정보(required: 선거코드, 선거타입)
-    response = HTTParty.get("#{ELECTION_CANDIDATES_URL}?ServiceKey=#{Rails.application.credentials.dig(:public_data_service_key)}&resultType=json&numOfRows=1000&sgId=#{election.sg_id}&sgTypecode=#{election.sg_type_code}&numOfRows=1000")
+    @response = HTTParty.get("#{ELECTION_CANDIDATES_URL}?ServiceKey=#{Rails.application.credentials.dig(:public_data_service_key)}&resultType=json&numOfRows=1000&sgId=#{election.sg_id}&sgTypecode=#{election.sg_type_code}&numOfRows=1000")
+
+    ResponseLog.create(msg: "후보자 open api", request_type: "open_api", response: @response)
 
     @candidate_hash = {
-      response_code: response.dig("getPofelcddRegistSttusInfoInqire", "header", "code"),
-      list: response.dig("getPofelcddRegistSttusInfoInqire", "item"),
+      response_code: @response.dig("getPofelcddRegistSttusInfoInqire", "header", "code"),
+      list: @response.dig("getPofelcddRegistSttusInfoInqire", "item"),
     }
   end
 
@@ -105,10 +122,13 @@ class OpenApiDataService
           "User-Agent" => "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.103 Safari/537.36",
         },
       )
-    response = JSON.parse(response)
+    @response = JSON.parse(response)
+
+    ResponseLog.create(msg: "현 의원 open api", request_type: "open_api", response: @response)
+
     @member_hash = {
-      response_code: response.dig("nwvrqwxyaytdsfvhu").first.dig("head").second.dig("RESULT", "CODE"),
-      list: response.dig("nwvrqwxyaytdsfvhu").second.dig("row"),
+      response_code: @response.dig("nwvrqwxyaytdsfvhu").first.dig("head").second.dig("RESULT", "CODE"),
+      list: @response.dig("nwvrqwxyaytdsfvhu").second.dig("row"),
     }
   end
 end
