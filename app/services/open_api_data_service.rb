@@ -79,7 +79,7 @@ class OpenApiDataService
           election_id: election.id,
           name: member_data.dig("HG_NM"),
           birth: member_data.dig("BTH_DATE").to_date,
-        ).update(gender: UsefulService.valid_gender(member_data.dig("SEX_GBN_NM")), status: "current", info: member_data)
+        ).update(political_party_id: party&.id, gender: UsefulService.valid_gender(member_data.dig("SEX_GBN_NM")), status: "current", info: member_data)
       end
     rescue Exceptions::OpenApiError => e
       ErrorLog.create(msg: e.message, response: @response)

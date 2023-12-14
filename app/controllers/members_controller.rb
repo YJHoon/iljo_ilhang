@@ -1,6 +1,7 @@
 class MembersController < ApplicationController
-  def create
-    Member.create!(permit_params)
+  def index
+    members = Member.all
+    render json: each_serializer(members, MembersSerializer)
   end
 
   private
