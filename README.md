@@ -7,6 +7,19 @@
 
 ---
 
+```
+bundle install
+rails db:create db:migrate
+```
+
+`rails c` 명령어로 콘솔에 들어간 후, 아래 명령어를 치면 현 의원 정보 업데이트 가능
+
+```
+OpenApiDataService.new.update_member
+```
+
+---
+
 Image Upload with Carrierwave, fog, S3, CloudFront  
 Before start the server, you need to install 'imagemagick'
 

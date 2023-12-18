@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2023_12_03_065246) do
+ActiveRecord::Schema[7.1].define(version: 2023_12_14_081201) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -33,9 +33,16 @@ ActiveRecord::Schema[7.1].define(version: 2023_12_03_065246) do
 
   create_table "elections", force: :cascade do |t|
     t.string "title"
-    t.string "date"
+    t.string "vote_date"
     t.string "sg_id"
-    t.boolean "is_active", default: false
+    t.string "sg_type_code"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "error_logs", force: :cascade do |t|
+    t.string "msg"
+    t.json "response"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
@@ -73,6 +80,14 @@ ActiveRecord::Schema[7.1].define(version: 2023_12_03_065246) do
     t.string "logo_image"
     t.boolean "is_active", default: false
     t.string "color"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "response_logs", force: :cascade do |t|
+    t.string "msg"
+    t.integer "request_type", default: 0
+    t.json "response"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
