@@ -1,0 +1,53 @@
+version: "3.8"
+
+services:
+  web:
+    build:
+      context: .
+      # dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    depends_on:
+      - redis
+      - postgres
+      - sidekiq
+    env_file:
+      - .env # Load environment variables from a file
+    environment:
+      RAILS_ENV: development
+      RACK_ENV: development
+      DB_HOST: postgres
+      DB_USERNAME: ${DB_USERNAME}
+      DB_PASSWORD: ${DB_PASSWORD}
+
+  sidekiq:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    depends_on:
+      - redis
+      - postgres
+    env_file:
+      - .env # Load environment variables from a file
+    environment:
+      RAILS_ENV: ${RAILS_ENV}
+      RACK_ENV: ${RACK_ENV}
+      DB_HOST: ${DB_HOST}
+      DB_USERNAME: ${DB_USERNAME}
+      DB_PASSWORD: ${DB_PASSWORD}
+    command: bundle exec sidekiq # Command to start Sidekiq
+
+  redis:
+    image: "redis:latest"
+    ports:
+      - "6379:6379"
+
+  postgres:
+    image: "postgres:latest"
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
+
