@@ -1,8 +1,8 @@
 # config valid for current version and patch releases of Capistrano
 lock "~> 3.18.0"
 
-set :application, "ilzo_ilhang"
-set :repo_url, "git@github.com:YJHoon/ilzo_ilhang.git"
+set :application, "iljo_ilhang"
+set :repo_url, "git@github.com:YJHoon/iljo_ilhang.git"
 
 set :deploy_to, "/home/deploy/iljoilhang"
 
