@@ -94,6 +94,13 @@ GEM
     capistrano-rails (1.6.3)
       capistrano (~> 3.1)
       capistrano-bundler (>= 1.1, < 3)
+    capistrano-rbenv (2.2.0)
+      capistrano (~> 3.1)
+      sshkit (~> 1.3)
+    capistrano-sidekiq (2.3.1)
+      capistrano (>= 3.9.0)
+      capistrano-bundler
+      sidekiq (>= 6.0)
     carrierwave (3.0.5)
       activemodel (>= 6.0.0)
       activesupport (>= 6.0.0)
@@ -306,6 +313,8 @@ DEPENDENCIES
   bootsnap
   capistrano (~> 3.10)
   capistrano-rails (~> 1.6)
+  capistrano-rbenv (~> 2.1, >= 2.1.4)
+  capistrano-sidekiq
   carrierwave
   debug
   factory_bot_rails
