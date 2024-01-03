@@ -7,6 +7,8 @@
 
 production:
   :concurrency: 25
+  logfile: /var/log/sidekiq.log
 
 staging:
   :concurrency: 15
+  logfile: /var/log/sidekiq.log
