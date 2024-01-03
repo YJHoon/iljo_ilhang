@@ -1,4 +1,4 @@
-class SerializerGenerator < Rails::Generators::NamedBase
+class SerializerGenerator < ActiveModel::Serializer
   source_root File.expand_path("templates", __dir__)
 
   def generate_controller
@@ -30,6 +30,6 @@ class SerializerGenerator < Rails::Generators::NamedBase
   end
 
   def version
-    name.include?("/") ? "#{name.split('/').first.upcase}::" : ""
+    name.include?("/") ? "#{name.split("/").first.upcase}::" : ""
   end
 end

@@ -1,4 +1,4 @@
-class ServiceGenerator < Rails::Generators::NamedBase
+class ServiceGenerator
   source_root File.expand_path("templates", __dir__)
 
   def generate_controller
