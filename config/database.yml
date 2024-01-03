@@ -80,5 +80,5 @@ test:
 production:
   <<: *default
   database: iljo_ilhang_production
-  username: iljo_ilhang
+  username: deploy
   password: <%= ENV["ILjO_ILHANG_DATABASE_PASSWORD"] %>
