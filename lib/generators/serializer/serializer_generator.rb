@@ -1,4 +1,4 @@
-class SerializerGenerator < ActiveModel::Serializer
+class SerializerGenerator < Rails::Generators::NamedBase
   source_root File.expand_path("templates", __dir__)
 
   def generate_controller
