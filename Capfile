@@ -22,8 +22,9 @@ require "whenever/capistrano"
 require "capistrano/sidekiq"
 
 install_plugin Capistrano::Sidekiq  # Default sidekiq tasks
-install_plugin Capistrano::Sidekiq::Systemd
+# install_plugin Capistrano::Sidekiq::Systemd
 
+set :sidekiq_service, false
 set :rbenv_type, :user
 set :rbenv_ruby, "3.2.2"
 # Include tasks from other gems included in your Gemfile
