@@ -5,6 +5,7 @@ set :application, "iljo_ilhang"
 set :repo_url, "git@github.com:YJHoon/iljo_ilhang.git"
 
 set :deploy_to, "/home/deploy/iljoilhang"
+set :sidekiq_config_file, "/etc/sidekiq.yml"
 
 append :linked_files, "config/master.key"
 append :linked_dirs, "log", "tmp/pids", "tmp/cache", "tmp/sockets", "vendor/bundle", ".bundle", "public/system", "public/uploads"
