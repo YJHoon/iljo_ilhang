@@ -79,7 +79,7 @@ GEM
       public_suffix (>= 2.0.2, < 6.0)
     airbrussh (1.5.0)
       sshkit (>= 1.6.1, != 1.7.0)
-    base64 (0.2.0)
+    base64 (0.1.1)
     bigdecimal (3.1.5)
     bootsnap (1.17.0)
       msgpack (~> 1.2)
@@ -122,7 +122,7 @@ GEM
     drb (2.2.0)
       ruby2_keywords
     erubi (1.12.0)
-    excon (0.108.0)
+    excon (0.109.0)
     factory_bot (6.4.5)
       activesupport (>= 5.0.0)
     factory_bot_rails (6.4.3)
@@ -135,7 +135,7 @@ GEM
       fog-core (~> 2.1)
       fog-json (~> 1.1)
       fog-xml (~> 0.1)
-    fog-core (2.3.0)
+    fog-core (2.4.0)
       builder
       excon (~> 0.71)
       formatador (>= 0.2, < 2.0)
@@ -175,7 +175,6 @@ GEM
     mime-types-data (3.2023.1205)
     mini_magick (4.12.0)
     mini_mime (1.1.5)
-    mini_portile2 (2.8.5)
     minitest (5.20.0)
     msgpack (1.7.2)
     multi_json (1.15.0)
@@ -194,12 +193,7 @@ GEM
       net-protocol
     net-ssh (7.2.1)
     nio4r (2.7.0)
-    nokogiri (1.16.0)
-      mini_portile2 (~> 2.8.2)
-      racc (~> 1.4)
     nokogiri (1.16.0-arm64-darwin)
-      racc (~> 1.4)
-    nokogiri (1.16.0-x86_64-linux)
       racc (~> 1.4)
     oj (3.16.3)
       bigdecimal (>= 3.0)
@@ -312,10 +306,9 @@ GEM
 
 PLATFORMS
   arm64-darwin-22
-  ruby
-  x86_64-linux
 
 DEPENDENCIES
+  base64 (= 0.1.1)
   bootsnap
   capistrano (~> 3.10)
   capistrano-passenger (~> 0.2.0)
