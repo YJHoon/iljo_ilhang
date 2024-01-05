@@ -4,7 +4,7 @@
 
 일조일항
 
-iljo_ilhang
+iljoilhang
 
 ## 서비스 정체성
 
