@@ -10,6 +10,7 @@ gem "pg", "~> 1.1"
 
 # Use the Puma web server [https://github.com/puma/puma]
 gem "puma", ">= 5.0"
+gem "base64", "0.1.1"
 
 gem "sidekiq", "~> 7.2"
 gem "whenever", require: false
@@ -60,4 +61,9 @@ end
 group :development do
   # Speed up commands on slow machines / big apps [https://github.com/rails/spring]
   # gem "spring"
+  gem "capistrano", "~> 3.10", require: false
+  gem "capistrano-rails", "~> 1.6", require: false
+  gem 'capistrano-passenger', '~> 0.2.0'
+  gem "capistrano-rbenv", "~> 2.1", ">= 2.1.4"
+  gem "capistrano-sidekiq"
 end

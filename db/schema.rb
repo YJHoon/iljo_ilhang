@@ -15,8 +15,8 @@ ActiveRecord::Schema[7.1].define(version: 2023_12_14_081201) do
   enable_extension "plpgsql"
 
   create_table "candidates", force: :cascade do |t|
-    t.bigint "political_party_id", null: false
-    t.bigint "election_id", null: false
+    t.bigint "political_party_id"
+    t.bigint "election_id"
     t.string "name"
     t.string "image"
     t.string "region"
@@ -63,7 +63,7 @@ ActiveRecord::Schema[7.1].define(version: 2023_12_14_081201) do
   end
 
   create_table "pledges", force: :cascade do |t|
-    t.bigint "member_id", null: false
+    t.bigint "member_id"
     t.string "title"
     t.string "goal"
     t.string "method"
