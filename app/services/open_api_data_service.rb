@@ -71,15 +71,18 @@ class OpenApiDataService
       raise Exceptions::OpenApiError, "현 의원 api response 이슈" unless @member_hash.dig(:list).present?
       raise Exceptions::OpenApiError, "현 의원 api response 이슈" if @member_hash.dig(:response_code) != "INFO-000"
 
-      @member_hash.dig(:list).each do |member_data|
-        party = PoliticalParty.find_by_name(member_data.dig("POLY_NM"))
-        election = Election.last # TODO: 현재 국회의원들의 election 찾아야함
+      ActiveRecord::Base.transaction do
+        Member.update_all(status: "past")
+        @member_hash.dig(:list).each do |member_data|
+          party = PoliticalParty.find_by_name(member_data.dig("POLY_NM"))
+          election = Election.last # TODO: 현재 국회의원들의 election 찾아야함
 
-        Member.find_or_create_by(
-          election_id: election.id,
-          name: member_data.dig("HG_NM"),
-          birth: member_data.dig("BTH_DATE").to_date,
-        ).update(gender: UsefulService.valid_gender(member_data.dig("SEX_GBN_NM")), status: "current", info: member_data)
+          Member.find_or_create_by(
+            election_id: election.id,
+            name: member_data.dig("HG_NM"),
+            birth: member_data.dig("BTH_DATE").to_date,
+          ).update(political_party_id: party&.id, gender: UsefulService.valid_gender(member_data.dig("SEX_GBN_NM")), status: "current", info: member_data)
+        end
       end
     rescue Exceptions::OpenApiError => e
       ErrorLog.create(msg: e.message, response: @response)
