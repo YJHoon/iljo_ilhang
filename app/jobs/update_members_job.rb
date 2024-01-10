@@ -10,5 +10,6 @@ class UpdateMembersJob < ApplicationJob
 
     # 캐싱된거랑 다를 경우 업데이트 진행
     OpenApi::MemberDataService.new.update_members
+    Crawling::UpdateDataService.new.member_image_update
   end
 end

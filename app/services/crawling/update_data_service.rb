@@ -13,7 +13,7 @@ class Crawling::UpdateDataService < Crawling::BaseService
         member_list = document.css("div#content div.col-md-2")
         break if member_list.size.zero?
 
-        update_member_image(member_list)
+        update_image(member_list)
         @page_num += 1
       end
     rescue => e
@@ -23,7 +23,7 @@ class Crawling::UpdateDataService < Crawling::BaseService
 
   private
 
-  def update_member_image(member_list)
+  def update_image(member_list)
     member_list.each do |data|
       image_url = data.css("a img").first.attribute("src").value
       name = data.css("a h4").first.text.split.last
