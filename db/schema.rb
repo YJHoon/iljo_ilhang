@@ -27,6 +27,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_01_10_135044) do
 
   create_table "bills", force: :cascade do |t|
     t.string "bill_id"
+    t.string "bill_no"
     t.string "bill_name"
     t.date "propose_date"
     t.string "age"
