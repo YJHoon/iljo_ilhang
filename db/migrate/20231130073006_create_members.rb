@@ -8,7 +8,7 @@ class CreateMembers < ActiveRecord::Migration[7.1]
       t.date :birth
       t.integer :gender, default: 0
       t.integer :status, default: 0
-      t.json :info
+      t.json :response
 
       t.timestamps
     end

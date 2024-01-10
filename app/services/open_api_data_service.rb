@@ -9,6 +9,8 @@ class OpenApiDataService
   ELECTION_PLEDGE_URL = "http://apis.data.go.kr/9760000/ElecPrmsInfoInqireService/getCnddtElecPrmsInfoInqire"
   # 활동중인 의원 정보 호출
   CURRENT_MEMBER_URL = "https://open.assembly.go.kr/portal/openapi/nwvrqwxyaytdsfvhu"
+  # 의원 발의법안 호출
+  MEMBER_BILLS = "https://open.assembly.go.kr/portal/openapi/nzmimeepazxkubdpn"
 
   def initialize()
     @response = nil
@@ -53,7 +55,7 @@ class OpenApiDataService
             candidate.region = candidate_data.dig("sdName")
             candidate.gender = UsefulService.valid_gender(candidate_data.dig("gender"))
             candidate.hubo_id = candidate_data.dig("huboid")
-            candidate.info = candidate_data
+            candidate.response = candidate_data
           end
         end
       rescue Exceptions::OpenApiError => e
@@ -81,7 +83,7 @@ class OpenApiDataService
             election_id: election.id,
             name: member_data.dig("HG_NM"),
             birth: member_data.dig("BTH_DATE").to_date,
-          ).update(political_party_id: party&.id, gender: UsefulService.valid_gender(member_data.dig("SEX_GBN_NM")), status: "current", info: member_data)
+          ).update(political_party_id: party&.id, gender: UsefulService.valid_gender(member_data.dig("SEX_GBN_NM")), status: "current", response: member_data)
         end
       end
     rescue Exceptions::OpenApiError => e
@@ -89,6 +91,9 @@ class OpenApiDataService
     rescue => e
       ErrorLog.create(msg: e.message, response: @response)
     end
+  end
+
+  def update_member_bill
   end
 
   private
@@ -99,8 +104,8 @@ class OpenApiDataService
     ResponseLog.create(msg: "선거 코드 open api", request_type: "open_api", response: @response)
 
     @election_hash = {
-      response_code: @response.dig("getCommonSgCodeList", "header", "code"),
-      list: @response.dig("getCommonSgCodeList", "item"),
+      response_code: @response.dig("response", "header", "resultCode"),
+      list: @response.dig("response", "body", "items", "item"),
     }
   end
 
@@ -119,6 +124,26 @@ class OpenApiDataService
     response =
       HTTParty.get(
         "#{CURRENT_MEMBER_URL}?key=#{Rails.application.credentials.dig(:open_api_portal_access_key)}&Type=json&pSize=1000",
+        headers: {
+          "Content-Type" => "application/json",
+          "Accept" => "*/*",
+          "User-Agent" => "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.103 Safari/537.36",
+        },
+      )
+    @response = JSON.parse(response)
+
+    ResponseLog.create(msg: "현 의원 open api", request_type: "open_api", response: @response)
+
+    @member_hash = {
+      response_code: @response.dig("nwvrqwxyaytdsfvhu").first.dig("head").second.dig("RESULT", "CODE"),
+      list: @response.dig("nwvrqwxyaytdsfvhu").second.dig("row"),
+    }
+  end
+
+  def get_current_member_data # 현 의원 정보
+    response =
+      HTTParty.get(
+        "#{MEMBER_BILLS}?key=#{Rails.application.credentials.dig(:open_api_portal_access_key)}&Type=json&pSize=1000",
         headers: {
           "Content-Type" => "application/json",
           "Accept" => "*/*",

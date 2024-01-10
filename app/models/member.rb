@@ -1,4 +1,5 @@
 class Member < ApplicationRecord
+  ALL_CACHE_KEY = "member_all"
   mount_uploader :image, ImageUploader
 
   belongs_to :political_party, optional: true
