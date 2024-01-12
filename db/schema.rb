@@ -31,7 +31,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_01_10_135044) do
     t.string "bill_name"
     t.date "propose_date"
     t.string "age"
-    t.json "response"
+    t.jsonb "response"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
@@ -46,7 +46,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_01_10_135044) do
     t.integer "gender", default: 0
     t.integer "status", default: 0
     t.string "hubo_id"
-    t.json "reponse"
+    t.jsonb "reponse"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["election_id"], name: "index_candidates_on_election_id"
@@ -64,7 +64,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_01_10_135044) do
 
   create_table "error_logs", force: :cascade do |t|
     t.string "msg"
-    t.json "response"
+    t.jsonb "response"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
@@ -72,12 +72,14 @@ ActiveRecord::Schema[7.1].define(version: 2024_01_10_135044) do
   create_table "members", force: :cascade do |t|
     t.bigint "political_party_id"
     t.bigint "election_id"
+    t.integer "seq_id"
     t.string "name"
     t.string "image"
     t.date "birth"
     t.integer "gender", default: 0
     t.integer "status", default: 0
-    t.json "response"
+    t.jsonb "response"
+    t.jsonb "show_info"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["election_id"], name: "index_members_on_election_id"
@@ -109,7 +111,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_01_10_135044) do
   create_table "response_logs", force: :cascade do |t|
     t.string "msg"
     t.integer "request_type", default: 0
-    t.json "response"
+    t.jsonb "response"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
@@ -121,7 +123,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_01_10_135044) do
     t.string "phone"
     t.integer "gender", default: 0
     t.string "uid"
-    t.json "response"
+    t.jsonb "response"
     t.string "access_token"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false

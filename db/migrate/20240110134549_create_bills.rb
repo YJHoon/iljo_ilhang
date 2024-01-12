@@ -6,7 +6,7 @@ class CreateBills < ActiveRecord::Migration[7.1]
       t.string :bill_name
       t.date :propose_date
       t.string :age
-      t.json :response
+      t.jsonb :response
       t.timestamps
     end
   end

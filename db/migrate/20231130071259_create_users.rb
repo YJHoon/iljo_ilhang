@@ -7,7 +7,7 @@ class CreateUsers < ActiveRecord::Migration[7.1]
       t.string :phone
       t.integer :gender, default: 0
       t.string :uid
-      t.json :response
+      t.jsonb :response
       t.string :access_token
 
       t.timestamps
