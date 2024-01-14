@@ -32,7 +32,8 @@ class OpenApi::ElectionDataService < OpenApi::BaseService
   def get_election_code # 선거 코드
     begin
       loop do
-        @response = HTTParty.get("#{OpenApi::BaseService::ELECTION_CODE_URL}?ServiceKey=#{Rails.application.credentials.dig(:public_data_service_key)}&resultType=json&pageNo=#{@page_num}&numOfRows=100")
+        response = HTTParty.get("#{OpenApi::BaseService::ELECTION_CODE_URL}?ServiceKey=#{Rails.application.credentials.dig(:public_data_service_key)}&resultType=json&pageNo=#{@page_num}&numOfRows=100")
+        @response = JSON.parse(response.body)
 
         ResponseLog.create(msg: "선거 코드 open api", request_type: "open_api", response: @response)
         break if @response.dig("response", "header", "resultCode") != "INFO-00"

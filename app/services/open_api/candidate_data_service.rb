@@ -37,7 +37,8 @@ class OpenApi::CandidateDataService < OpenApi::BaseService
   def get_election_candidates(election) # 후보자들 정보(required: 선거코드, 선거타입)
     begin
       loop do
-        @response = HTTParty.get("#{OpenApi::BaseService::ELECTION_CANDIDATES_URL}?ServiceKey=#{Rails.application.credentials.dig(:public_data_service_key)}&resultType=json&sgId=#{election.sg_id}&sgTypecode=#{election.sg_type_code}&pageNo=#{@page_num}&numOfRows=100")
+        response = HTTParty.get("#{OpenApi::BaseService::ELECTION_CANDIDATES_URL}?ServiceKey=#{Rails.application.credentials.dig(:public_data_service_key)}&resultType=json&sgId=#{election.sg_id}&sgTypecode=#{election.sg_type_code}&pageNo=#{@page_num}&numOfRows=100")
+        @response = JSON.parse(response.body)
 
         ResponseLog.create(msg: "후보자 open api", request_type: "open_api", response: @response)
         break if @response.dig("getPofelcddRegistSttusInfoInqire", "header", "code") != "INFO-00"
