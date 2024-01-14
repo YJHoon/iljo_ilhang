@@ -34,22 +34,31 @@ class OpenApi::MemberDataService < OpenApi::BaseService
   private
 
   def get_current_member_data # 현 의원 정보
-    response =
-      HTTParty.get(
-        "#{OpenApi::BaseService::CURRENT_MEMBER_URL}?key=#{Rails.application.credentials.dig(:open_api_portal_access_key)}&Type=json&pSize=1000",
-        headers: {
-          "Content-Type" => "application/json",
-          "Accept" => "*/*",
-          "User-Agent" => "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.103 Safari/537.36",
-        },
-      )
-    @response = JSON.parse(response)
+    begin
+      response =
+        HTTParty.get(
+          "#{OpenApi::BaseService::CURRENT_MEMBER_URL}?key=#{Rails.application.credentials.dig(:open_api_portal_access_key)}&Type=json&pSize=1000",
+          headers: {
+            "Content-Type" => "application/json",
+            "Accept" => "*/*",
+            "User-Agent" => "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.103 Safari/537.36",
+          },
+        )
+      @response = JSON.parse(response)
 
-    ResponseLog.create(msg: "현 의원 open api", request_type: "open_api", response: @response)
+      ResponseLog.create(msg: "현 의원 open api", request_type: "open_api", response: @response)
 
-    @member_hash = {
-      response_code: @response.dig("nwvrqwxyaytdsfvhu").first.dig("head").second.dig("RESULT", "CODE"),
-      list: @response.dig("nwvrqwxyaytdsfvhu").second.dig("row"),
-    }
+      @member_hash = {
+        response_code: @response.dig("nwvrqwxyaytdsfvhu").first.dig("head").second.dig("RESULT", "CODE"),
+        list: @response.dig("nwvrqwxyaytdsfvhu").second.dig("row"),
+      }
+
+      raise Exceptions::OpenApiError, "현 의원 api response 이슈" unless @member_hash.dig(:list).present?
+      raise Exceptions::OpenApiError, "현 의원 api response 이슈" if @member_hash.dig(:response_code) != "INFO-000"
+    rescue Exceptions::OpenApiError => e
+      ErrorLog.create(msg: e.message, response: @response)
+    rescue => e
+      ErrorLog.create(msg: e.message, response: @response)
+    end
   end
 end

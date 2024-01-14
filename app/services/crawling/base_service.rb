@@ -7,8 +7,10 @@ module Crawling
     OPEN_ASSEMBLY_MEMBER_LIST_CACHE_KEY = "open_assembly_member_list".freeze
 
     def initialize
-      @member_list = Rails.cache.read(OPEN_ASSEMBLY_MEMBER_LIST_CACHE_KEY) || Nokogiri::XML::NodeSet.new(Nokogiri::XML::Document.new)
       @page_num = 1
+      @member_list = Rails.cache.read(OPEN_ASSEMBLY_MEMBER_LIST_CACHE_KEY) || Nokogiri::XML::NodeSet.new(Nokogiri::XML::Document.new)
+
+      get_member_list() if @member_list.empty?
     end
 
     protected
@@ -25,10 +27,9 @@ module Crawling
       loop do
         url = "https://watch.peoplepower21.org/?mid=AssemblyMembers&mode=search&party=&region=&sangim=&gender=&elect_num=&page=#{@page_num}#watch"
         document = scrap_page(url)
-        list = document.css("div#content div.col-md-2")
-        break if list.size.zero?
+        break if document.css("div#content div.col-md-2").size.zero?
 
-        @member_list += list
+        @member_list += document.css("div#content div.col-md-2")
         @page_num += 1
       end
     end

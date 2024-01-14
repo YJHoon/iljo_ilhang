@@ -1,20 +1,21 @@
 class OpenApi::CandidateDataService < OpenApi::BaseService
   def initialize()
     @response = nil
-    @candidate_hash = {}
+    @candidate_list = []
+    @code = ""
+    @page_num = 1
   end
 
   def update_candidates
-    Election.all.each do |election|
-      begin
-        get_election_candidates(election)
+    # TODO: 최근 선거 찾아야함 특정 선거 찾아야 함
+    election = Election.find(132)
+    begin
+      get_election_candidates(election)
 
-        raise Exceptions::OpenApiError, "후보자 정보 api response 이슈" unless @candidate_hash.dig(:list).present?
-        raise Exceptions::OpenApiError, "후보자 정보 api response 이슈" if @candidate_hash.dig(:response_code) != "INFO-00"
+      raise Exceptions::OpenApiError, "후보자 정보 api response 이슈" if @candidate_list.empty?
 
-        next unless @candidate_hash.dig(:response_code).present?
-
-        @candidate_hash.dig(:list).each do |candidate_data|
+      @candidate_list.each do |candidate_data|
+        ActiveRecord::Base.transaction do
           political_party = PoliticalParty.find_or_create_by(name: candidate_data.dig("jdName"))
           political_party.candidates.find_or_create_by(election_id: election.id, name: candidate_data.dig("name"), birth: candidate_data.dig("birthday").to_date) do |candidate|
             candidate.region = candidate_data.dig("sdName")
@@ -23,24 +24,29 @@ class OpenApi::CandidateDataService < OpenApi::BaseService
             candidate.response = candidate_data
           end
         end
-      rescue Exceptions::OpenApiError => e
-        ErrorLog.create(msg: e.message, response: @response)
-      rescue => e
-        ErrorLog.create(msg: e.message, response: @response)
       end
+    rescue Exceptions::OpenApiError => e
+      ErrorLog.create(msg: e.message, response: @response)
+    rescue => e
+      ErrorLog.create(msg: e.message, response: @response)
     end
   end
 
   private
 
   def get_election_candidates(election) # 후보자들 정보(required: 선거코드, 선거타입)
-    @response = HTTParty.get("#{OpenApi::BaseService::ELECTION_CANDIDATES_URL}?ServiceKey=#{Rails.application.credentials.dig(:public_data_service_key)}&resultType=json&numOfRows=1000&sgId=#{election.sg_id}&sgTypecode=#{election.sg_type_code}&numOfRows=1000")
+    begin
+      loop do
+        @response = HTTParty.get("#{OpenApi::BaseService::ELECTION_CANDIDATES_URL}?ServiceKey=#{Rails.application.credentials.dig(:public_data_service_key)}&resultType=json&sgId=#{election.sg_id}&sgTypecode=#{election.sg_type_code}&pageNo=#{@page_num}&numOfRows=100")
 
-    ResponseLog.create(msg: "후보자 open api", request_type: "open_api", response: @response)
-
-    @candidate_hash = {
-      response_code: @response.dig("getPofelcddRegistSttusInfoInqire", "header", "code"),
-      list: @response.dig("getPofelcddRegistSttusInfoInqire", "item"),
-    }
+        ResponseLog.create(msg: "후보자 open api", request_type: "open_api", response: @response)
+        break if @response.dig("getPofelcddRegistSttusInfoInqire", "header", "code") != "INFO-00"
+        @candidate_list += @response.dig("getPofelcddRegistSttusInfoInqire", "item")
+        @page_num += 1
+      end
+      @code = @response.dig("getPofelcddRegistSttusInfoInqire", "header", "code")
+    rescue => e
+      ErrorLog.create(msg: e.message, response: @response)
+    end
   end
 end

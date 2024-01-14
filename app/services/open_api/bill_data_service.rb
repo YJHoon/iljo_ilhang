@@ -11,8 +11,8 @@ class OpenApi::BillDataService < OpenApi::BaseService
       raise Exceptions::OpenApiError, "현 대수 발의법안 api response 이슈" unless @bill_hash.dig(:list).present?
       raise Exceptions::OpenApiError, "현 대수 발의법안 api response 이슈" if @bill_hash.dig(:response_code) != "INFO-000"
 
-      ActiveRecord::Base.transaction do
-        @bill_hash.dig(:list).each do |bill_data|
+      @bill_hash.dig(:list).each do |bill_data|
+        ActiveRecord::Base.transaction do
           bill = Bill.find_or_create_by(bill_id: bill_data.dig("BILL_ID"), bill_no: bill_data.dig("BILL_NO")) do |bill|
             bill.bill_name = bill_data.dig("BILL_NAME")
             bill.age = bill_data.dig("AGE")
