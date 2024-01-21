@@ -29,6 +29,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_01_10_135044) do
     t.string "bill_id"
     t.string "bill_no"
     t.string "bill_name"
+    t.string "proc_result"
     t.date "propose_date"
     t.string "age"
     t.jsonb "response"
@@ -75,6 +76,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_01_10_135044) do
     t.integer "seq_id"
     t.string "name"
     t.string "image"
+    t.float "attendance"
     t.date "birth"
     t.integer "gender", default: 0
     t.integer "status", default: 0

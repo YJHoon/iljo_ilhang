@@ -4,13 +4,17 @@ module Crawling
 
     MEMBER_DATA_UPDATE_CACHE_KEY = "open_api_members_update_date".freeze # 국회의원 정보 마지막 수정 날짜
     BILL_DATA_UPDATE_CACHE_KEY = "open_api_bills_update_date".freeze # 발의법안 마지막 수정 날짜
-    OPEN_ASSEMBLY_MEMBER_LIST_CACHE_KEY = "open_assembly_member_list".freeze
 
     def initialize
       @page_num = 1
-      @member_list = Rails.cache.read(OPEN_ASSEMBLY_MEMBER_LIST_CACHE_KEY) || Nokogiri::XML::NodeSet.new(Nokogiri::XML::Document.new)
+      @member_list = Nokogiri::XML::NodeSet.new(Nokogiri::XML::Document.new)
 
       get_member_list() if @member_list.empty?
+    end
+
+    def scrap_member_show_page(seq_id)
+      url = "https://watch.peoplepower21.org/?mid=Member&member_seq=#{seq_id}#watch"
+      document = scrap_page(url)
     end
 
     protected

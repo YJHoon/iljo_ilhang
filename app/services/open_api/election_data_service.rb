@@ -3,10 +3,9 @@ class OpenApi::ElectionDataService < OpenApi::BaseService
     @response = nil
     @election_list = []
     @code = ""
-    @page_num = 1
   end
 
-  def update_elections # 선거 정보 가져오는 코드
+  def update # 선거 정보 가져오는 코드
     get_election_code()
 
     begin
@@ -31,18 +30,19 @@ class OpenApi::ElectionDataService < OpenApi::BaseService
 
   def get_election_code # 선거 코드
     begin
+      page_num = 1
       loop do
-        response = HTTParty.get("#{OpenApi::BaseService::ELECTION_CODE_URL}?ServiceKey=#{Rails.application.credentials.dig(:public_data_service_key)}&resultType=json&pageNo=#{@page_num}&numOfRows=100")
+        response = HTTParty.get("#{OpenApi::BaseService::ELECTION_CODE_URL}?ServiceKey=#{Rails.application.credentials.dig(:public_data_service_key)}&resultType=json&pageNo=#{page_num}&numOfRows=100")
         @response = JSON.parse(response.body)
 
         ResponseLog.create(msg: "선거 코드 open api", request_type: "open_api", response: @response)
-        break if @response.dig("response", "header", "resultCode") != "INFO-00"
+        @code = @response.dig("response", "header", "resultCode")
+        break if @code != "INFO-00"
         @election_list += @response.dig("response", "body", "items", "item")
-        @page_num += 1
+        page_num += 1
       end
-      @code = @response.dig("response", "header", "resultCode")
     rescue => e
-      ErrorLog.create(msg: e.message, response: @response)
+      ErrorLog.create(msg: "[#{@code}] #{e.message}", response: @response)
     end
   end
 end

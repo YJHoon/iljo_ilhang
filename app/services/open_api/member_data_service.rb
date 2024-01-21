@@ -4,7 +4,7 @@ class OpenApi::MemberDataService < OpenApi::BaseService
     @member_hash = {}
   end
 
-  def update_members
+  def update
     get_current_member_data()
 
     begin
@@ -24,10 +24,13 @@ class OpenApi::MemberDataService < OpenApi::BaseService
           ).update(political_party_id: party&.id, gender: UsefulService.valid_gender(member_data.dig("SEX_GBN_NM")), status: "current", response: member_data)
         end
       end
+      return true
     rescue Exceptions::OpenApiError => e
       ErrorLog.create(msg: e.message, response: @response)
+      return false
     rescue => e
       ErrorLog.create(msg: e.message, response: @response)
+      return false
     end
   end
 

@@ -3,10 +3,9 @@ class OpenApi::CandidateDataService < OpenApi::BaseService
     @response = nil
     @candidate_list = []
     @code = ""
-    @page_num = 1
   end
 
-  def update_candidates
+  def update
     # TODO: 최근 선거 찾아야함 특정 선거 찾아야 함
     election = Election.find(132)
     begin
@@ -36,18 +35,19 @@ class OpenApi::CandidateDataService < OpenApi::BaseService
 
   def get_election_candidates(election) # 후보자들 정보(required: 선거코드, 선거타입)
     begin
+      page_num = 1
       loop do
-        response = HTTParty.get("#{OpenApi::BaseService::ELECTION_CANDIDATES_URL}?ServiceKey=#{Rails.application.credentials.dig(:public_data_service_key)}&resultType=json&sgId=#{election.sg_id}&sgTypecode=#{election.sg_type_code}&pageNo=#{@page_num}&numOfRows=100")
+        response = HTTParty.get("#{OpenApi::BaseService::ELECTION_CANDIDATES_URL}?ServiceKey=#{Rails.application.credentials.dig(:public_data_service_key)}&resultType=json&sgId=#{election.sg_id}&sgTypecode=#{election.sg_type_code}&pageNo=#{page_num}&numOfRows=100")
         @response = JSON.parse(response.body)
 
         ResponseLog.create(msg: "후보자 open api", request_type: "open_api", response: @response)
-        break if @response.dig("getPofelcddRegistSttusInfoInqire", "header", "code") != "INFO-00"
+        @code = @response.dig("getPofelcddRegistSttusInfoInqire", "header", "code")
+        break if @code != "INFO-00"
         @candidate_list += @response.dig("getPofelcddRegistSttusInfoInqire", "item")
-        @page_num += 1
+        page_num += 1
       end
-      @code = @response.dig("getPofelcddRegistSttusInfoInqire", "header", "code")
     rescue => e
-      ErrorLog.create(msg: e.message, response: @response)
+      ErrorLog.create(msg: "[#{@code}] #{e.message}", response: @response)
     end
   end
 end

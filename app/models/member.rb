@@ -11,4 +11,8 @@ class Member < ApplicationRecord
 
   enum gender: { male: 0, female: 1 }
   enum status: { past: 0, current: 1 }
+
+  def self.where_ko_or_ch_name(name)
+    where("name = ? OR response ->> 'HJ_NM' = ?", name, name)
+  end
 end

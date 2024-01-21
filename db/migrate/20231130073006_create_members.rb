@@ -6,6 +6,7 @@ class CreateMembers < ActiveRecord::Migration[7.1]
       t.integer :seq_id
       t.string :name
       t.string :image
+      t.float :attendance
       t.date :birth
       t.integer :gender, default: 0
       t.integer :status, default: 0
