@@ -4,7 +4,7 @@ class MembersController < ApplicationController
 
     render json: {
              parties: each_serializer(PoliticalParty.all, PoliticalPartySerializer),
-             members: each_serializer(members, MembersSerializer, context: { average_attendance: members.calc_average_attendance }),
+             members: each_serializer(members, MembersSerializer),
            }
   end
 
