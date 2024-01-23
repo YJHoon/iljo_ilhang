@@ -3,9 +3,9 @@ class CreatePoliticalParties < ActiveRecord::Migration[7.1]
     create_table :political_parties do |t|
       t.string :name
       t.string :banner_image
-      t.string :logo_image
       t.boolean :is_active, default: false
-      t.string :color
+      t.float :average_attendance, default: 0
+      t.integer :members_count, default: 0
 
       t.timestamps
     end

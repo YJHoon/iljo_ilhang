@@ -1,4 +1,8 @@
-every 1.day, at: "4:30 am" do
-  # print "test"
-  # runner "MyModel.task_to_run_at_four_thirty_in_the_morning"
+every 1.week, at: "2:00 am" do
+  runner "WeeklyUpdateJob.perform_later"
+end
+
+every 1.day, at: "2:00 am" do
+  runner "UpdateMembersJob.perform_later"
+  runner "UpdateBillsJob.perform_later"
 end

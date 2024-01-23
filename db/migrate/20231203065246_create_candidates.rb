@@ -10,7 +10,7 @@ class CreateCandidates < ActiveRecord::Migration[7.1]
       t.integer :gender, default: 0
       t.integer :status, default: 0
       t.string :hubo_id
-      t.json :info
+      t.jsonb :reponse
 
       t.timestamps
     end

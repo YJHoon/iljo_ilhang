@@ -36,11 +36,10 @@ bundle install
 rails db:create db:migrate
 ```
 
-의원 데이터 바로 업데이트를 원할 경우  
-`rails c` 명령어로 콘솔에 들어간 후, 아래 명령어를 치면 현 의원 정보 업데이트 가능
+의원, 발의법안, 선거정보 데이터 바로 업데이트를 원할 경우
 
 ```shell
-OpenApiDataService.new.update_member
+rails db:seed
 ```
 
 ---
@@ -67,4 +66,7 @@ brew install imagemagick
    [중앙선거관리위원회 선거공약정보](https://www.data.go.kr/data/15040587/openapi.do#tab_layer_detail_function)
 
 4. 활동중인 의원 정보 호출
-   [열린국회정보](https://open.assembly.go.kr/portal/data/service/selectAPIServicePage.do/OWSSC6001134T516707#none)
+   [열린국회정보 의원정보](https://open.assembly.go.kr/portal/data/service/selectAPIServicePage.do/OWSSC6001134T516707#none)
+
+5. 발의법률안
+   [열린국회정보 발의법률안](https://open.assembly.go.kr/portal/data/service/selectAPIServicePage.do/OK7XM1000938DS17215)

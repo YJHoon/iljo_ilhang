@@ -1,7 +1,7 @@
 class MembersSerializer < Panko::Serializer
-  attributes :id, :name, :image, :party_name
+  attributes :id, :name, :image_url, :party_name, :attendance
 
   def party_name
-    object.political_party.present? ? object.political_party.name : "무소속"
+    object.response&.dig("POLY_NM")
   end
 end

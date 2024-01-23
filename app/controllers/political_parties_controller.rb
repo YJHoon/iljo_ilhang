@@ -6,6 +6,6 @@ class PoliticalPartiesController < ApplicationController
   private
 
   def permit_params
-    params.permit(:name, :banner_image, :logo_image)
+    params.permit(:name, :banner_image)
   end
 end

@@ -10,9 +10,32 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2023_12_14_081201) do
+ActiveRecord::Schema[7.1].define(version: 2024_01_10_135044) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "bill_members", force: :cascade do |t|
+    t.bigint "member_id"
+    t.bigint "bill_id"
+    t.string "name"
+    t.integer "proposer_type", default: 0
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["bill_id"], name: "index_bill_members_on_bill_id"
+    t.index ["member_id"], name: "index_bill_members_on_member_id"
+  end
+
+  create_table "bills", force: :cascade do |t|
+    t.string "bill_id"
+    t.string "bill_no"
+    t.string "bill_name"
+    t.string "proc_result"
+    t.date "propose_date"
+    t.string "age"
+    t.jsonb "response"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
 
   create_table "candidates", force: :cascade do |t|
     t.bigint "political_party_id"
@@ -24,7 +47,7 @@ ActiveRecord::Schema[7.1].define(version: 2023_12_14_081201) do
     t.integer "gender", default: 0
     t.integer "status", default: 0
     t.string "hubo_id"
-    t.json "info"
+    t.jsonb "reponse"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["election_id"], name: "index_candidates_on_election_id"
@@ -42,7 +65,7 @@ ActiveRecord::Schema[7.1].define(version: 2023_12_14_081201) do
 
   create_table "error_logs", force: :cascade do |t|
     t.string "msg"
-    t.json "response"
+    t.jsonb "response"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
@@ -50,12 +73,15 @@ ActiveRecord::Schema[7.1].define(version: 2023_12_14_081201) do
   create_table "members", force: :cascade do |t|
     t.bigint "political_party_id"
     t.bigint "election_id"
+    t.integer "seq_id"
     t.string "name"
     t.string "image"
+    t.float "attendance"
     t.date "birth"
     t.integer "gender", default: 0
     t.integer "status", default: 0
-    t.json "info"
+    t.jsonb "response"
+    t.jsonb "show_info"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["election_id"], name: "index_members_on_election_id"
@@ -77,9 +103,9 @@ ActiveRecord::Schema[7.1].define(version: 2023_12_14_081201) do
   create_table "political_parties", force: :cascade do |t|
     t.string "name"
     t.string "banner_image"
-    t.string "logo_image"
     t.boolean "is_active", default: false
-    t.string "color"
+    t.float "average_attendance", default: 0.0
+    t.integer "members_count", default: 0
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
@@ -87,7 +113,7 @@ ActiveRecord::Schema[7.1].define(version: 2023_12_14_081201) do
   create_table "response_logs", force: :cascade do |t|
     t.string "msg"
     t.integer "request_type", default: 0
-    t.json "response"
+    t.jsonb "response"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
@@ -99,12 +125,14 @@ ActiveRecord::Schema[7.1].define(version: 2023_12_14_081201) do
     t.string "phone"
     t.integer "gender", default: 0
     t.string "uid"
-    t.json "response"
+    t.jsonb "response"
     t.string "access_token"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
 
+  add_foreign_key "bill_members", "bills"
+  add_foreign_key "bill_members", "members"
   add_foreign_key "candidates", "elections"
   add_foreign_key "candidates", "political_parties"
   add_foreign_key "members", "elections"
