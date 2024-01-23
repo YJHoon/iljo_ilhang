@@ -10,7 +10,7 @@ Rails.application.routes.draw do
 
   resources :users, only: [:create]
   resources :political_parties, only: [:create]
-  resources :members, only: [:index]
+  resources :members, only: [:index, :show]
   resources :assemblies, only: [:index]
 
   # Defines the root path route ("/")

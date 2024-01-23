@@ -65,6 +65,11 @@ class Crawling::UpdateMemberDataService < Crawling::BaseService
         ErrorLog.create(msg: "열려라국회 국회의원 이미지, seq_id 업데이트: #{e.message}")
       end
     end
+
+    PoliticalParty.eager_load(:members).all.each do |party|
+      party.average_attendance = party.members.calc_average_attendance
+      party.save
+    end
   end
 
   private

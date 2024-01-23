@@ -103,9 +103,9 @@ ActiveRecord::Schema[7.1].define(version: 2024_01_10_135044) do
   create_table "political_parties", force: :cascade do |t|
     t.string "name"
     t.string "banner_image"
-    t.string "logo_image"
     t.boolean "is_active", default: false
-    t.string "color"
+    t.float "average_attendance", default: 0.0
+    t.integer "members_count", default: 0
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end

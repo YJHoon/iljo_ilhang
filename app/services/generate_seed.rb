@@ -8,32 +8,33 @@ class GenerateSeed
   Election.instance_eval do
     def generate_seed
       OpenApi::ElectionDataService.new.update
-      print "Election Done"
+      puts "Election Done"
     end
   end
 
   Member.instance_eval do
     def generate_seed
       OpenApi::MemberDataService.new.update
-      print "Member Done"
+      puts "Member Done"
       crawling_member = Crawling::UpdateMemberDataService.new
       crawling_member.update_member_image_and_seq_id
+      puts "Member Info image seqId Done"
       crawling_member.update_member_show_info
-      print "Member Info Done"
+      puts "Member Info Done"
     end
   end
 
   Bill.instance_eval do
     def generate_seed
       OpenApi::BillDataService.new.update
-      print "Bill Done"
+      puts "Bill Done"
     end
   end
 
   Candidate.instance_eval do
     def generate_seed
       OpenApi::CandidateDataService.new.update
-      print "Candidate Done"
+      puts "Candidate Done"
     end
   end
 end
