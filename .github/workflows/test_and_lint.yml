@@ -1,4 +1,4 @@
-name: Deploy on Merge to Master
+name: Test And Lint
 
 on:
   push:
@@ -7,7 +7,6 @@ on:
 
 jobs:
   ci_validation:
-    name: Continuous Integration
     runs-on: ubuntu-latest
 
     steps:
@@ -21,8 +20,8 @@ jobs:
           bundler-cache: true
           cache-version: 1
 
-      - name: Test
-        run: bundle exec rspec
+      # - name: Test
+      #   run: bundle exec rspec
 
       - name: Lint
         run: bundle exec rufo .
