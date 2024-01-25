@@ -2,7 +2,7 @@ name: Deploy on Merge to Master
 
 on:
   push:
-    branches: [main]
+    branches: [main, 240124/github_action]
   workflow_dispatch:
 
 jobs:
