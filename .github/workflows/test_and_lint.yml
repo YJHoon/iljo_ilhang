@@ -1,0 +1,29 @@
+name: Deploy on Merge to Master
+
+on:
+  push:
+    branches-ignore: []
+  workflow_dispatch:
+
+jobs:
+  ci_validation:
+    name: Continuous Integration
+    runs-on: ubuntu-latest
+
+    steps:
+     - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@v3
+        with:
+          ruby-version: 3.2.2
+          bundler-cache: true
+          cache-version: 1
+
+      - name: Test
+        run: bundle exec rspec
+
+      - name: Lint
+        run: bundle exec rufo .
+
