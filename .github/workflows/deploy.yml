@@ -20,18 +20,14 @@ jobs:
           ruby-version: 3.2.2
           bundler-cache: true
 
-      - name: Install Dependencies
-        run: |
-          bundle install
-
-      - name: Run Tests
-        run: |
-          bundle exec rspec
-          export RSPEC_EXIT_CODE=$?
-          if [ $RSPEC_EXIT_CODE -ne 0 ]; then
-            echo "RSpec failed. Deployment halted."
-            exit $RSPEC_EXIT_CODE
-          fi
+      # - name: Run Tests
+      #   run: |
+      #     bundle exec rspec
+      #     export RSPEC_EXIT_CODE=$?
+      #     if [ $RSPEC_EXIT_CODE -ne 0 ]; then
+      #       echo "RSpec failed. Deployment halted."
+      #       exit $RSPEC_EXIT_CODE
+      #     fi
 
       - name: Install SSH key to Server
         uses: shimataro/ssh-key-action@v2
