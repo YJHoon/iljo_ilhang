@@ -35,6 +35,7 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           name: github-actions
           known_hosts: "random-placeholder-value-replaced-by-keyscan-below"
+          passphrase: ${{ secrets.PASSPHRASE }}
           config: |
             host iljoilhang.com
               IdentityFile ~/.ssh/github-actions
