@@ -2,9 +2,7 @@
 
 ## 서비스명
 
-일조일항
-
-iljoilhang
+일조일항(iljoilhang)
 
 ## 서비스 정체성
 
@@ -26,23 +24,19 @@ iljoilhang
 - Ubuntu Server 22.04 LTS (HVM)
 - Nginx 1.18.0
 
-## 세팅
-
----
+## 프로젝트 설치 및 실행방법
 
 ```shell
-# ruby와 bundler 등 기본 개발환경 세팅이 완료 된 후, 프로젝트 clone
+git clone git@github.com:YJHoon/iljo_ilhang.git
+
+# ruby 3.2.2 버전 필요
+# bundler 등 기본 개발환경 세팅이 완료 된 후, 프로젝트 clone
 bundle install
 rails db:create db:migrate
-```
 
-의원, 발의법안, 선거정보 데이터 바로 업데이트를 원할 경우
-
-```shell
+# 의원, 발의법안, 선거정보 데이터 바로 업데이트를 원할 경우
 rails db:seed
 ```
-
----
 
 스토리지로 Carrierwave, fog, S3, CloudFront를 이용합니다.  
 서버 실행 전, 'imagemagick'를 설치해야 합니다.
@@ -51,6 +45,17 @@ rails db:seed
 # mac 유저일 경우,
 brew install imagemagick
 ```
+
+## API
+
+| HTTP Method | Request URL  |
+| ----------- | ------------ |
+| GET         | /members     |
+| GET         | /members/:id |
+
+## ERD 설계
+
+## 파이프라인
 
 ---
 
