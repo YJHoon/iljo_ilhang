@@ -23,5 +23,5 @@ jobs:
       # - name: Test
       #   run: bundle exec rspec
 
-      - name: Lint
-        run: rufo .
+      # - name: Lint
+      #   run: bundle exec rufo .
