@@ -34,12 +34,15 @@ jobs:
         with:
           key: ${{ secrets.SSH_KEY }}
           name: github-actions
-          known_hosts: "random-placeholder-value-replaced-by-keyscan-below"
           config: |
-            host iljoilhang.com
-              IdentityFile ~/.ssh/github-actions
-              IdentitiesOnly yes
-              ForwardAgent yes
+            Host bastion
+            HostName ${{ secrets.SERVER_PORT }}
+            User ${{ secrets.SERVER_USER }}
+            IdentityFile ~/.ssh/github_actions
+      # host iljoilhang.com
+      #   IdentityFile ~/.ssh/github-actions
+      #   IdentitiesOnly yes
+      #   ForwardAgent yes
 
       - name: Adding Known Hosts
         run: |
