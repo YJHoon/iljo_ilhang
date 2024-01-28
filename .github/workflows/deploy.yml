@@ -52,7 +52,7 @@ jobs:
         run: cat ~/.ssh/known_hosts
 
       - name: Debug Host Key
-        run: ssh-keygen -lf ~/.ssh/github-actions
+        run: cat ~/.ssh/github-actions
 
       - name: Deploy to production
         run: |
