@@ -2,7 +2,6 @@ class CreateMembers < ActiveRecord::Migration[7.1]
   def change
     create_table :members do |t|
       t.references :political_party, foreign_key: true
-      t.references :election, foreign_key: true
       t.integer :seq_id
       t.string :name
       t.string :image

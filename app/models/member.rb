@@ -2,7 +2,6 @@ class Member < ApplicationRecord
   mount_uploader :image, ImageUploader
 
   belongs_to :political_party, optional: true, counter_cache: :members_count # TODO: counter cache 동작 안 함. 체크해보기
-  belongs_to :election
 
   has_many :bill_members
   has_many :representive_bill_members, -> { where(proposer_type: "representive") }, class_name: "BillMember"

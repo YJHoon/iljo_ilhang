@@ -72,7 +72,6 @@ ActiveRecord::Schema[7.1].define(version: 2024_01_10_135044) do
 
   create_table "members", force: :cascade do |t|
     t.bigint "political_party_id"
-    t.bigint "election_id"
     t.integer "seq_id"
     t.string "name"
     t.string "image"
@@ -84,7 +83,6 @@ ActiveRecord::Schema[7.1].define(version: 2024_01_10_135044) do
     t.jsonb "show_info"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["election_id"], name: "index_members_on_election_id"
     t.index ["political_party_id"], name: "index_members_on_political_party_id"
   end
 
@@ -135,7 +133,6 @@ ActiveRecord::Schema[7.1].define(version: 2024_01_10_135044) do
   add_foreign_key "bill_members", "members"
   add_foreign_key "candidates", "elections"
   add_foreign_key "candidates", "political_parties"
-  add_foreign_key "members", "elections"
   add_foreign_key "members", "political_parties"
   add_foreign_key "pledges", "members"
 end
