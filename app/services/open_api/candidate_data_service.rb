@@ -6,8 +6,7 @@ class OpenApi::CandidateDataService < OpenApi::BaseService
   end
 
   def update
-    # TODO: 최근 선거 찾아야함 특정 선거 찾아야 함
-    election = Election.find(132)
+    election = Election.find(132) # TODO: 최근 선거 찾아야함 특정 선거 찾아야 함
     begin
       get_election_candidates(election)
 
