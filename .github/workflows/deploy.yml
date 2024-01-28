@@ -45,7 +45,7 @@ jobs:
               Host bastion
 
       - name: Adding Known Hosts
-        run: echo ${{ secrets.KNOWN_HOSTS_OF_BASTION }} > ~/.ssh/known_hosts
+        run: echo "${{ secrets.KNOWN_HOSTS_OF_BASTION }}"" > ~/.ssh/known_hosts
 
       - name: Adding ssh
         run: echo ${{ secrets.SSH_KEY }} > ~/.ssh/github
