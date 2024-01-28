@@ -48,6 +48,12 @@ jobs:
         run: |
           ssh-keyscan -H ${{ secrets.SERVER_PORT }} >> ~/.ssh/known_hosts
 
+      - name: Debug Known Hosts
+        run: cat ~/.ssh/known_hosts
+
+      - name: Debug Host Key
+        run: ssh-keygen -lf ~/.ssh/github-actions
+
       - name: Deploy to production
         run: |
           eval "$(ssh-agent -s)"
