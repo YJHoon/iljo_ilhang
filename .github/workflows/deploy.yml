@@ -45,8 +45,9 @@ jobs:
               Host bastion
 
       - name: Adding Known Hosts
-        run: |
-          ssh-keyscan -H ${{ secrets.SERVER_PORT }} >> ~/.ssh/known_hosts
+        run: echo ${{ secrets.KNOWN_HOSTS_OF_BASTION }} > ~/.ssh/known_hosts
+        run: echo ${{ secrets.SSH_KEY }} > ~/.ssh/github
+# ssh-keyscan -H ${{ secrets.SERVER_PORT }} >> ~/.ssh/known_hosts
 
       - name: Debug Known Hosts
         run: cat ~/.ssh/known_hosts
