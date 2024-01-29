@@ -45,10 +45,11 @@ jobs:
               Host bastion
 
       - name: Adding Known Hosts
-        run: echo "${{ secrets.KNOWN_HOSTS_OF_BASTION }}"" > ~/.ssh/known_hosts
+        run: ssh-keyscan -t rsa ${{ secrets.SERVER_PORT }} >> ~/.ssh/known_hosts
+        # run: echo "${{ secrets.KNOWN_HOSTS_OF_BASTION }}"" > ~/.ssh/known_hosts
 
-      - name: Adding ssh
-        run: echo ${{ secrets.SSH_KEY }} > ~/.ssh/github
+      # - name: Adding ssh
+      # run: echo ${{ secrets.SSH_KEY }} > ~/.ssh/github
       # ssh-keyscan -H ${{ secrets.SERVER_PORT }} >> ~/.ssh/known_hosts
 
       - name: Debug Known Hosts
