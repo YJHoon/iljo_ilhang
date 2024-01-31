@@ -1,4 +1,4 @@
-class API::MembersController < ApplicationController
+class MembersController < ApplicationController
   def index
     render json: {
              parties: each_serializer(PoliticalParty.all, PoliticalPartySerializer),
