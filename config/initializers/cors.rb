@@ -7,7 +7,7 @@
 
 Rails.application.config.middleware.insert_before 0, Rack::Cors do
   allow do
-    origins "https://ilzo-ilhang-front.vercel.app", "https://iljoilhang.com", "http://localhost:3000"
+    origins "https://ilzo-ilhang-front.vercel.app", "https://iljoilhang.com", "https://api.iljoilhang.com", "http://localhost:3000"
     # origins "*"
 
     resource "*",
