@@ -6,6 +6,8 @@ set :repo_url, "git@github.com:YJHoon/iljo_ilhang.git"
 
 set :deploy_to, "/home/deploy/iljoilhang"
 set :sidekiq_config_file, "/etc/sidekiq.yml"
+set :passenger_restart_options, -> { "#{deploy_to}/current --ignore-app-not-running" }
+
 
 append :linked_files, "config/master.key"
 append :linked_dirs, "log", "tmp/pids", "tmp/cache", "tmp/sockets", "vendor/bundle", ".bundle", "public/system", "public/uploads"
